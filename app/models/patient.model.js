@@ -1,47 +1,46 @@
 module.exports = (sequelize, Sequelize, DataTypes) => {
-    const Doctor = sequelize.define(
-        "doctor", // Model name
+    const Patient = sequelize.define(
+        "patient", // Model name
         {
             // Model attributes
-            doc_id: {
+            pat_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true
             },
-            mdcn: {
+            cell: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            specialty: {
+            home: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            work: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            preferred_number: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            description: {
+            address: {
                 type: DataTypes.STRING,
-                 allowNull: false,
+                allowNull: true,
             },
-            
-            start_date: {
+            gender: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            dob: {
                 type: DataTypes.DATE,
                 allowNull: false,
             },
-            end_date: {
-                type: DataTypes.DATE,
+            user_id: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            file1: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-             file2: {
-                 type: DataTypes.STRING,
-                 allowNull: false,
-             },
-              user_id: {
-                  type: DataTypes.INTEGER,
-                  allowNull: false,
-              },
 
 
             created_at: {
@@ -52,14 +51,14 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
                 allowNull: false,
                 type: DataTypes.DATE
             }
-        }, {
+        },{
             // Options
             timestamps: true,
             underscrored: true,
-            createdAt: "created_at",
-            updatedAt: "updated_at"
+           createdAt: "created_at",
+           updatedAt: "updated_at"
         }
     );
 
-    return Doctor;
-}; 
+    return Patient;
+};

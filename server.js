@@ -2,10 +2,21 @@
 //Server
 const express = require("express");
 const bodyParser = require("body-parser");
+const multer = require("multer");
+const path = require("path");
 const cors = require("cors");
 const config = require("./app/config/config");
-
+const buffer = require("buffer");
+const fs = require('fs');
+// database
+const db = require("./app/models");
 const app = express();
+
+// parse requests of content-type - application/json
+app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb', extended: true}))
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const corsOptions = {
     origin: "http://localhost:8081"
@@ -13,20 +24,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
-
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
 }));
-
-// database
-const db = require ("./app/models");
-const Role = db.role;
-// db.sequelize.sync().then(() => {
-//     //initial(); // Just use it in development, at the first time execution!. Delete it in production
-// });
 
 // simple route
 app.get("/", (req, res) => {
@@ -36,7 +37,9 @@ app.get("/", (req, res) => {
 });
 
 // api routes
-// require("./app/routes/book.routes")(app);
+require("./app/routes/doctor.routes")(app);
+require("./app/routes/patient.routes")(app);
+require("./app/routes/schedule.routes")(app);
 // require("./app/routes/sensordata.routes.js")(app);
 // require("./app/routes/people.routes.js")(app);
 // require("./app/routes/project.routes.js")(app);
@@ -47,7 +50,7 @@ require("./app/routes/auth.routes")(app);
 // set port, listen for requests
 
 
-const PORT = 8080;
+const PORT = 8081;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

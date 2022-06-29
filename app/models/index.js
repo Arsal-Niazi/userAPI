@@ -30,6 +30,9 @@ db.sequelize = sequelize;
 // db.sensor = require("./sensor.model.js")(sequelize, Sequelize, DataTypes);
 // db.sensorvalue = require("./sensorvalue.model.js")(sequelize, Sequelize, DataTypes);
 db.user = require("./user.model.js")(sequelize, Sequelize, DataTypes);
+db.doctor = require("./doctor.model.js")(sequelize, Sequelize, DataTypes);
+db.patient = require("./patient.model.js")(sequelize, Sequelize, DataTypes);
+db.schedule = require("./schedule.model.js")(sequelize, Sequelize, DataTypes);
 // db.role = require("./role.model.js")(sequelize, Sequelize, DataTypes);
 
 // db.role.belongsToMany(db.user, {

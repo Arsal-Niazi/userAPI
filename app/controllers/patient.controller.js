@@ -1,48 +1,48 @@
 const config = require("../config/config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const db = require("../models/doctor.model");
+const db = require("../models/patient.model");
 // console.log(db)
-const Doctor = db.doctor;
+const Patient = db.patient;
 const Op = db.Op;
 
 // Create and Save a new Book
 exports.create = async (req, res) => {
     console.log(req.body);
     // Validate request
-    if (!req.body.mdcn) {
+    if (!req.body.cell) {
         res.status(400).send({
             message: "Content can not be empty!"
         });
         return;
     }
-    
+
     // Create a Book
-    const doctor = {
-        mdcn: req.body.mdcn,
-        specialty: req.body.specialty,
-        description: req.body.description,
-        start_date: req.body.start_date,
-        end_date: req.body.end_date,
-        file1:req.body.file1,
-        file2: req.body.file2,
-        user_id:req.body.user_id
+    const patient = {
+            cell: req.body.cell,
+            home: req.body.home,
+            work: req.body.work,
+            preferred_number: req.body.preferred_number,
+            address: req.body.address,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            user_id: user.id
     };
 
-console.log(doctor)
+    console.log(patient)
     // Create a Book 
     //  Doctor.create = ({
     //   
     // });
     //console.log("ye rha doctor",doctor);
     // Save Book in database
-    Doctor.create(doctor)
+    Patient.create(patient)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Book."
+                message: err.message || "Some error occurred while creating Patient."
             });
         });
 };
