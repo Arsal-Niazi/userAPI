@@ -252,14 +252,14 @@ exports.findOneUser = (req, res) => {
 
         //Find Doctor By ID
         exports.findOneDoc = (req, res) => {
-            const id = req.params.id;
+            const id = req.params.doc_id;
             Doctor.findByPk(id)
                 .then(data => {
                     if (data) {
                         res.send(data);
                     } else {
                         res.status(404).send({
-                            message: `Cannot find Tutorial with id=${id}.`
+                            message: `Cannot find Doctor with id=${id}.`
                         });
                     }
                 })
@@ -287,7 +287,7 @@ exports.findAllDoc = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving tutorials."
+                message: err.message || "Some error occurred while retrieving doctors."
             });
         });
 };
@@ -315,7 +315,7 @@ exports.findAllPat = (req, res) => {
 
 //Find Patient By ID
 exports.findOnePat = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.pat_id;
     Patient.findByPk(id)
         .then(data => {
             if (data) {
@@ -362,10 +362,10 @@ exports.updateUser = (req, res) => {
 
 //Update a Doctor by Id
 exports.updateDoc = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.doc_id;
     Doctor.update(req.body, {
             where: {
-                id: id
+                doc_id: id
             }
         })
         .then(num => {
@@ -375,7 +375,7 @@ exports.updateDoc = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: `Cannot update Docto with id=${id}. Maybe User was not found or req.body is empty!`
+                    message: `Cannot update Doctor with id=${id}. Maybe Doctor was not found or req.body is empty!`
                 });
             }
         })
@@ -385,6 +385,33 @@ exports.updateDoc = (req, res) => {
             });
         });
 };
+
+//Update a Patient by Id
+exports.updatePat = (req, res) => {
+    const id = req.params.pat_id;
+    Patient.update(req.body, {
+            where: {
+                pat_id: id
+            }
+        })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Patient updated successfully."
+                });
+            } else {
+                res.send({
+                    message: `Cannot update Patient with id=${id}. Maybe Patient was not found or req.body is empty!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error updating Patient with id=" + id
+            });
+        });
+};
+
 
 //Delete User By ID
 exports.deleteUser = (req, res) => {
@@ -408,6 +435,58 @@ exports.deleteUser = (req, res) => {
         .catch(err => {
             res.status(500).send({
                 message: "Could not delete User with id=" + id
+            });
+        });
+};
+
+//Delete Doctor By ID
+exports.deleteDoc = (req, res) => {
+    const id = req.params.doc_id;
+    Doctor.destroy({
+            where: {
+                doc_id: id
+            }
+        })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Doctor deleted successfully!"
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete Doctor with id=${id}. Maybe Doctor was not found!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Could not delete Doctor with id=" + id
+            });
+        });
+};
+
+//Delete Patient By ID
+exports.deletePat = (req, res) => {
+    const id = req.params.pat_id;
+    Patient.destroy({
+            where: {
+                pat_id: id
+            }
+        })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Patient deleted successfully!"
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete Patient with id=${id}. Maybe Patient was not found!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Could not delete Patient with id=" + id
             });
         });
 };

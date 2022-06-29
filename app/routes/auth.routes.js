@@ -22,16 +22,22 @@ module.exports = function (app) {
 
     app.post("/api/auth/signin", controller.signin);
     // app.get("/api/auth/doctor", controller.findAll);
+    
     //Users
     app.get("/api/auth/findAll/user", controller.findAllUser);
     app.get("/api/auth/findOne/:id", controller.findOneUser);
     app.put("/api/auth/updateuser/:id", controller.updateUser);
     app.delete("/api/auth/delete/user/:id" , controller.deleteUser)
-
+    
+    //doctor
     app.get("/api/auth/findAll/doc", controller.findAllDoc);
-    app.get("/api/auth/findOne/doc/:id", controller.findOneDoc);
-    app.put("/api/auth/updatedoc/:id", controller.updateDoc);
-
+    app.get("/api/auth/findOne/doc/:doc_id", controller.findOneDoc);
+    app.put("/api/auth/updatedoc/:doc_id", controller.updateDoc);
+    app.delete("/api/auth/delete/doctor/:doc_id", controller.deleteDoc);
+    
+    //patient
     app.get("/api/auth/findAll/patient", controller.findAllPat);
-    app.get("/api/auth/findOne/patient/:id", controller.findOnePat);
+    app.get("/api/auth/findOne/patient/:pat_id", controller.findOnePat);
+    app.put("/api/auth/update/patient/:pat_id", controller.updatePat);
+    app.delete("/api/auth/delete/patient/:pat_id", controller.deletePat);
 };
