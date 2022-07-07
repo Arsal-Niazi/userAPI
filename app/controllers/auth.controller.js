@@ -7,9 +7,12 @@ const Role = db.role;
 const Doctor = db.doctor;
 const Patient = db.patient;
 const Schedule = db.schedule;
+const Appointment = db.appointment;
+const Rating = db.rating;
 const Op = db.Op;
 const fs = require('fs');
 const { query } = require("express");
+const { schedule, doctor } = require("../models");
 
 
 
@@ -225,7 +228,7 @@ exports.findAllUser = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving tutorials."
+                message: err.message || "Some error occurred while retrieving users."
             });
         });
 };
@@ -491,6 +494,51 @@ exports.deletePat = (req, res) => {
         });
 };
 
+//Retrieve all appointments from db
+exports.appointments = (req, res) => {
+    const appointment_date = req.params.appointment_date;
+    var condition = appointment_date ? {
+        appointment_date: {
+            [Op.like]: `%${appointment_date}%`
+        }
+    } : null;
+    Schedule.findAll({
+            where: condition
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving tutorials."
+            });
+        });
+};
+
+//Find Appointment By User_ID
+exports.appointmentById = (req, res) => {
+    const id = req.params.user_id;
+    Schedule.findByPk(id)
+        .then(data => {
+            if (data) {
+                res.send(data);
+            } else {
+                res.status(404).send({
+                    message: `Cannot find appointment with id=${id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving appointment with id=" + id
+            });
+        });
+};
+
+
+// Create and Save a new Appointment
+
+
 
 
 
@@ -526,28 +574,131 @@ exports.signin = (req, res) => {
                 expiresIn: 86400 // 24 hours
             });
 
-            let authorities = "";
-            user.getRoles().then(roles => {
-                console.log("shell", roles);
-                for (let i = 0; i < roles.length; i++) {
-                    //    authorities.push("ROLE_" + roles[i].name.toUpperCase());
-                    authorities = roles[i].name;
-                }
+            res.status(200).send({
+                                Login_success: "Wellcome " + user.firstname + " !",
+                                id: user.id,
+                                username: user.firstname + user.lastname + user.id,
+                                firstname: user.firstname,
+                                lastname: user.lastname,
+                                email: user.email,
+                                register_as: user.register_as,
+                                created_at: user.created_at,
+                                updated_at: user.updated_at
+                            });
+            // let authorities = "";
+            // user.getRoles().then(roles => {
+            //     console.log("shell", roles);
+            //     for (let i = 0; i < roles.length; i++) {
+            //         //    authorities.push("ROLE_" + roles[i].name.toUpperCase());
+            //         authorities = roles[i].name;
+            //     }
 
-                res.status(200).send({
-                    id: user.id,
-                    username: user.username,
-                    firstname: user.firstname,
-                    lastname: user.lastname,
+            //     res.status(200).send({
+            //         id: user.id,
+            //         username: user.username,
+            //         firstname: user.firstname,
+            //         lastname: user.lastname,
                     
-                    email: user.email
+            //         email: user.email
                     
-                });
-            });
+            //     });
+            // });
         })
         .catch(err => {
             res.status(500).send({
                 message: err.message
+            });
+        });
+};
+// Create and Save a new Appointment
+exports.createApt = async (req, res) => {
+    console.log(req.body);
+    // Validate request
+    if (!req.body.apt_date) {
+        res.status(400).send({
+            message: "Content can not be empty (Appointment)!"
+        });
+        return;
+    }
+
+    // Create a appointment
+    const appointment = {
+        apt_date: req.body.apt_date,
+        apt_time: req.body.apt_time,
+        status: req.body.status,
+        doc_id: req.body.doc_id,
+        pat_id: req.body.pat_id
+    };
+
+    console.log("Hello",appointment);
+
+    Appointment.create(appointment)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating appointment."
+            });
+        });
+};
+
+
+// Create and Save a rating in db
+exports.createRatings = async (req, res) => {
+    console.log(req.body);
+    // Validate request
+    if (!req.body.review) {
+        res.status(400).send({
+            message: "Review can not be empty!"
+        });
+        return;
+    }
+    if (!req.body.star) {
+        res.status(400).send({
+            message: "Star can not be empty!"
+        });
+        return;
+    }
+
+    // Create a Book
+    const rating = {
+        apt_id: req.body.apt_id,
+        review: req.body.review,
+        star: req.body.star,
+        user_id: req.body.user_id
+    };
+
+    console.log(rating)
+
+    Rating.create(rating)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while saving ratings."
+            });
+        });
+};
+
+//Retrieve all ratings from db
+exports.findAllRatings = (req, res) => {
+    const star = req.query.star;
+    var condition = star ? {
+        firstname: {
+            [Op.like]: `%${star}%`
+        }
+    } : null;
+    Rating.findAll({
+            where: condition
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving Ratings."
             });
         });
 };

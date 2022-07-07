@@ -1,5 +1,6 @@
 const {verifySignUp} = require("../middlewares/authJwt");
 const controller = require("../controllers/auth.controller");
+const aptController = require("../controllers/appointment.controller");
 
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -40,4 +41,15 @@ module.exports = function (app) {
     app.get("/api/auth/findOne/patient/:pat_id", controller.findOnePat);
     app.put("/api/auth/update/patient/:pat_id", controller.updatePat);
     app.delete("/api/auth/delete/patient/:pat_id", controller.deletePat);
+    
+    //Available Schedule appointments
+    app.get("/api/auth/appointments", controller.appointments);
+    app.get("/api/auth/appointments/:user_id", controller.appointmentById);
+
+    //Save Appointments
+    app.post("/api/auth/appointments/save", controller.createApt);
+
+    //Save Ratings
+    app.post("/api/auth/rating/save", controller.createRatings);
+    app.get("/api/auth/ratings", controller.findAllRatings);
 };
